@@ -1,13 +1,22 @@
 from tkinter import *
+from tkinter.colorchooser import *
+import math
+
 
 canvas_width = 500
 canvas_height = 200
 x1 = None
 y1 = None
-python_green = "#476042"
+window_background = 'white'
 
 
 class Brush:
+    # width of the selection circle around the brush
+    selected_width = 2
+    # gap between the selection circle and the brush
+    selected_gap = 2
+    selected_offset = selected_width + selected_gap
+
     def __init__(self, name, width=1, color='black'):
         self.__name = name
         self.__width = width
@@ -28,15 +37,46 @@ class Brush:
         return self.__width
 
     @property
+    def draw_width(self):
+        # add 2 pixels for drawing the brush; brush too small (e.g. 1px) is very hard to select
+        # even with using a halo to select objects around the point where the mouse button is clicked
+        return self.__width + 2
+
+    @property
     def color(self):
         return self.__color
+
+    @color.setter
+    def color(self, color):
+        self.__color = color
 
     def draw(self, x, y, canvas):
         """
         Draw a circular brush on the canvas, centered on (x,y)
         """
-        self.__id = canvas.create_oval(x - self.width / 2, y - self.width / 2, x + self.width / 2, y + self.width / 2,
-                                fill=self.color, tags=('brushes', self.name))
+
+        radius = math.ceil(self.draw_width / 2)
+        radius_ex = radius + int(self.selected_width / 2)
+        if self.selected:
+            # draw a circle around the selected brush
+            canvas.create_oval(x - self.selected_gap - radius,
+                               y - self.selected_gap - radius,
+                               x + self.selected_gap + radius_ex,
+                               y + self.selected_gap + radius_ex,
+                               fill='', width=self.selected_width)
+        else:
+            # erase the circle around the brush
+            canvas.create_oval(x - self.selected_offset - radius,
+                               y - self.selected_offset - radius,
+                               x + self.selected_offset + radius_ex,
+                               y + self.selected_offset + radius_ex,
+                               fill=window_background, width=0)
+        # draw the brush
+        self.__id = canvas.create_oval(x - int(self.draw_width / 2),
+                                       y - int(self.draw_width / 2),
+                                       x + int(self.draw_width / 2),
+                                       y + int(self.draw_width / 2),
+                                       fill=self.color, width=0, tags=('brushes', self.name))
 
     def __str__(self):
         return 'brush name={}, width={}, color={}'.format(self.name, self.width, self.color)
@@ -49,6 +89,7 @@ class Brush:
 
 class BrushesPanel:
     spacer = 4
+    default_color = 'black'
 
     def __init__(self, x0, y0, x1, y1, canvas):
         self.x0 = int(x0)
@@ -58,6 +99,19 @@ class BrushesPanel:
         self.canvas = canvas
         self.brushes = list()
         self.default = None
+        self.__color = self.default_color
+
+    @property
+    def color(self):
+        return self.__color
+
+    @color.setter
+    def color(self, new_color):
+        if self.color != new_color:
+            self.__color = new_color
+            brush = self.get_selected()
+            brush.color = new_color
+            self.draw()
 
     def add_brushes(self, *widths):
         """
@@ -79,7 +133,7 @@ class BrushesPanel:
         if sum(widths) + self.spacer * (len(widths) + 1) > panel_width:
             raise ValueError("panel width cannot fit the brushes")
 
-        self.brushes = [Brush('b' + str(i), width) for i, width in zip(range(1, count + 1), widths)]
+        self.brushes = [Brush('b' + str(i), width, color=self.color) for i, width in zip(range(1, count + 1), widths)]
         self.brushes.sort(key=lambda x: x.width, reverse=True)
         self.default = self.brushes[count//2]
 
@@ -88,8 +142,8 @@ class BrushesPanel:
         panel_height = self.y1 - self.y0
         count = len(self.brushes)
 
-        x_space = int(panel_width * 1.0 / (count + 1))
-        x_pos = range(x_space, self.x1, x_space)
+        self.x_space = int(panel_width * 1.0 / (count + 1))
+        x_pos = range(self.x_space, self.x1, self.x_space)
         y_space = int(panel_height / 2.0)
         y_pos = [y_space] * count
 
@@ -109,17 +163,21 @@ class BrushesPanel:
             return self.default
 
     def _deselect(self):
-        for b in self.brushes:
-            b.selected = False
+        selected_brush = self.get_selected()
+        selected_brush.selected = False
+        selected_brush.color = self.default_color
 
     def select(self, brush, event):
         canvas = event.widget
-        brush_id = canvas.find_closest(event.x, event.y)[0]
+        brush_id = canvas.find_closest(event.x, event.y, halo=self.x_space / 4)[0]
         closest_brush = self.get_brush(brush_id)
+        # 2 ways to get the selected brush should seelct the same brush
+        # this is just for illustration, only one of the 2 ways would suffice
         assert brush == closest_brush
         self._deselect()
         brush.selected = True
-        return brush
+        brush.color = self.color
+        self.draw()
 
 
 def paint(event):
@@ -137,8 +195,17 @@ def paint(event):
 
 
 def clear(event):
+    """
+    Called when releasing the mouse button, to clear the previous mouse position.
+    Otherwise, when clicking the button again, a straight would be drawn from the
+    release point to the new begin point.
+
+    :param event: release of mouse button (not used)
+    :return:
+    """
     global x1, y1
     x1 = y1 = None
+
 
 master = Tk()
 master.title("Painting using Lines")
@@ -154,7 +221,13 @@ panel.draw()
 w.bind("<B1-Motion>", paint)
 w.bind("<ButtonRelease>", clear)
 
-message = Label(master, text="Press and Drag the mouse to draw")
-message.pack(side=BOTTOM)
+Label(master, text="Press and Drag the mouse to draw").pack(side=BOTTOM)
+
+
+def change_color():
+    rgb, new_color = askcolor(color="#a0c312", title="Select brush color")
+    panel.color = new_color
+
+Button(master, text="Change color", padx=4, pady=6, command=change_color).pack(side=BOTTOM)
 
 mainloop()
