@@ -1,0 +1,37 @@
+from tkinter import *
+from tkinter.ttk import Separator
+
+root = Tk()
+
+frame = Frame(root, bg='light gray')
+frame.pack()
+
+Label(frame, text='123', justify=RIGHT, bg='black', fg='white', anchor=E).grid(columnspan=7, sticky=EW)
+Label(frame, text='C', bg='light gray').grid(row=1, ipadx=5, ipady=2)
+Separator(frame, orient=VERTICAL).grid(row=1, rowspan=8, column=1, sticky=NS)
+Label(frame, bg='light gray').grid(row=1, column=2, sticky=NSEW)
+Label(frame, bg='light gray').grid(row=1, column=4, sticky=NSEW)
+Separator(frame, orient=VERTICAL).grid(row=1, rowspan=8, column=5, sticky=NS)
+Label(frame, text='/', bg='orange', fg='white').grid(row=1, column=6, sticky=NSEW)
+Separator(frame, orient=HORIZONTAL).grid(row=2, column=0, columnspan=6, sticky=EW)
+Label(frame, text='7', bg='light gray').grid(row=3, column=0, ipadx=5, ipady=2)
+Label(frame, text='8', bg='light gray').grid(row=3, column=2, ipadx=5, ipady=2)
+Separator(frame, orient=VERTICAL).grid(row=3, rowspan=7, column=3, sticky=NS)
+Label(frame, text='9', bg='light gray').grid(row=3, column=4, ipadx=5, ipady=2)
+Label(frame, text='X', bg='orange', fg='white').grid(row=3, column=6, ipadx=5, ipady=2, sticky=NSEW)
+Separator(frame, orient=HORIZONTAL).grid(row=4, column=0, columnspan=6, sticky=EW)
+Label(frame, text='4', bg='light gray').grid(row=5, ipadx=5, ipady=2)
+Label(frame, text='5', bg='light gray').grid(row=5, column=2, ipadx=5, ipady=2)
+Label(frame, text='6', bg='light gray').grid(row=5, column=4, sticky=NSEW, ipadx=5, ipady=2)
+Label(frame, text='-', bg='orange', fg='white').grid(row=5, column=6, sticky=NSEW)
+Separator(frame, orient=HORIZONTAL).grid(row=6, column=0, columnspan=6, sticky=EW)
+Label(frame, text='1', bg='light gray').grid(row=7, ipadx=5, ipady=2)
+Label(frame, text='2', bg='light gray').grid(row=7, column=2)
+Label(frame, text='3', bg='light gray').grid(row=7, column=4)
+Label(frame, text='+', bg='orange', fg='white').grid(row=7, column=6, sticky=NSEW)
+Separator(frame, orient=HORIZONTAL).grid(row=8, column=0, columnspan=6, sticky=EW)
+Label(frame, text='0', bg='light gray').grid(row=9, columnspan=3, sticky=NSEW)
+Label(frame, text='.', bg='light gray').grid(row=9, column=4)
+Label(frame, text='=', bg='orange', fg='white').grid(row=9, column=6, sticky=NSEW)
+
+mainloop()
