@@ -1,5 +1,5 @@
 from tkinter import *
-# fro Python2, use
+# from Python2, use
 # from Tkinter import *
 
 root = Tk()

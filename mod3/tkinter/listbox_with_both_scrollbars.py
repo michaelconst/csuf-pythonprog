@@ -44,7 +44,7 @@ def scroll_handler(*scroll_args):
         if operation == SCROLL:
             # clicked on the arrows or in the scrollbar's trough, left ot right of the slider
             unit_type = scroll_args[2]
-            entry.xview_scroll(num_units, unit_type)
+            entry.xview_scroll(num_units, UNITS)
         elif operation == MOVETO:
             # dragged the slider
             entry.xview_moveto(num_units)
