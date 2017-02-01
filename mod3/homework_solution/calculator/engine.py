@@ -41,6 +41,14 @@ class Stack:
         return repr(self.items)
 
 
+def isnumber(x):
+    try:
+        number = float(x)
+        return True
+    except (ValueError, TypeError):
+        return False
+
+
 class Operator:
     @classmethod
     def fromsymbol(cls, symbol):
@@ -134,7 +142,7 @@ class Calculator:
                     else:
                         break
                 op_stack.push(token)
-            elif token.isidentifier() and not iskeyword(token) or token.isnumeric():
+            elif token.isidentifier() and not iskeyword(token) or isnumber(token):
                 postfix_list.append(token)
             elif token == '(':
                 op_stack.push(token)
@@ -144,7 +152,9 @@ class Calculator:
                     postfix_list.append(top_token)
                     top_token = op_stack.pop()
             else:
-                raise ValueError('token \'{}\' is not valid'.format(token))
+                err = 'token \'{}\' is not valid'.format(token)
+                print(err)
+                raise ValueError(err)
             print('token={}, postfix={}, stack.py={}'.format(token, str(postfix_list), str(op_stack)))
 
         while not op_stack.isEmpty():

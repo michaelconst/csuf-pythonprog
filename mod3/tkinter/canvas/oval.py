@@ -1,8 +1,10 @@
 from tkinter import *
 
 root = Tk()
-c = Canvas(root, width=200, height=100)
+c = Canvas(root, width=120, height=200)
 c.pack()
 
-c.create_oval(10, 10, 190, 90, fill='orange', outline='blue', width=4, stipple='gray25', outlinestipple='gray75')
+oval1 = c.create_oval(10, 10, 110, 90, fill='orange', outline='blue', width=4)
+oval2 = c.create_oval(10, 110, 110, 190, fill='blue', outline='orange', width=4)
+c.addtag("ovals", "all")
 mainloop()

@@ -6,7 +6,7 @@ author: mconstantin
 from keyword import iskeyword
 from abc import abstractmethod, ABC
 import math
-from mod1.homework.utils.stack import Stack
+from utils.stack import Stack
 
 
 OPERATOR_PLUS = '+'
@@ -384,9 +384,6 @@ class SquareRoot(UnaryExpression):
 
 if __name__ == '__main__':
     infix_expr = "3 + sqrt 4 * ( 7 - 3 ) / 4"
-    expr = Calculator.build_expr(infix_expr)
-
-    infix_expr = "8 / ( 5 - 3 )"
     expr = Calculator.build_expr(infix_expr)
 
     # supported by __str__ method

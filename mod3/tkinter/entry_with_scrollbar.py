@@ -12,12 +12,14 @@ def scroll_handler(*scroll_args):
     if scroll_args:
         operation, num_units = scroll_args[0], scroll_args[1]
         if operation == SCROLL:
-            # clicked on the arrows or in the scrollbar's trough, left ot right of the slider
+            # clicked on the arrows or in the scrollbar's trough, left or right of the slider
             unit_type = scroll_args[2]
             entry.xview_scroll(num_units, unit_type)
+            print('clicking on the scrollbar, units={}, type={}'.format(num_units, unit_type))
         elif operation == MOVETO:
             # dragged the slider
             entry.xview_moveto(num_units)
+            print('dragging the slider, pos={}'.format(num_units))
 
 
 sb_entry = Scrollbar(frame, orient=HORIZONTAL, command=scroll_handler)

@@ -5,7 +5,7 @@ author: mconstantin
 
 from keyword import iskeyword
 from abc import abstractmethod, ABC
-import math
+
 from mod1.homework.utils.stack import Stack
 
 
@@ -37,6 +37,7 @@ class Operator:
 
         :return: the sequence of operators symbols, e.g. ('+', '-', ...)
         """
+        # TODO implement this method
 
     @classmethod
     def is_operator(cls, symbol):
@@ -46,6 +47,7 @@ class Operator:
         :param symbol: the symbol to search for
         :return: True if the symbol is founf belonging to an Operator, False otherwise
         """
+        # TODO implement this method
 
     def __eq__(self, other):
         cls = self.__class__
@@ -130,7 +132,7 @@ class Calculator:
     """
 
     @classmethod
-    def infix2postfix(cls, infix_expr):
+    def _infix2postfix(cls, infix_expr):
         op_stack = Stack()
         postfix_list = []
         token_list = infix_expr.split()
@@ -186,14 +188,15 @@ class Calculator:
         return expr_stack.pop()
 
     @classmethod
-    def build_expr(cls, infix_expr):
-        return cls._build_tree(cls.infix2postfix(infix_expr))
+    def _build_expr(cls, infix_expr):
+        return cls._build_tree(cls._infix2postfix(infix_expr))
 
     @classmethod
-    def postfix_eval(cls, postfix_expr, context=None):
+    def _postfix_eval(cls, postfix_expr, context=None):
         """"
         Build the expression tree and evaluate in the given context, if any.
         """
+        # TODO implement this method
 
     @staticmethod
     def calculate(infix_expr):
@@ -204,6 +207,7 @@ class Calculator:
         :param infix_expr: expression to evaluate
         :return: value of the expression
         """
+        # TODO implement this method
 
 
 class Context:
@@ -391,21 +395,20 @@ class UnaryExpression(Expression):
     Implement a unary expression as the base class for other expressions, e.g.
     square root (sqrt), factorial (fact), inverse (inv), etc.
     """
+    # TODO implement this class
 
 
 class SquareRoot(UnaryExpression):
     """
-    Impement the quare root expression
+    Implement the quare root expression.
+    The operator symbol could be 'sqrt'.
     """
+    # TODO implement this class
 
 
-# TODO create tests
 if __name__ == '__main__':
-    infix_expr = "3 + sqrt 4 * ( 7 - 3 ) / 4"
-    expr = Calculator.build_expr(infix_expr)
-
     infix_expr = "8 / ( 5 - 3 )"
-    expr = Calculator.build_expr(infix_expr)
+    expr = Calculator._build_expr(infix_expr)
 
     # supported by __str__ method
     print('str: ' + str(expr))
