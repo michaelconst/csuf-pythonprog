@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Publishers</title>
+</head>
+<body>
+    <form action="", method="post">
+        {{ formset.management_form }}
+        <table>
+            {% for form in formset %}
+            {{ form }}
+            {% endfor %}
+        </table>
+    </form>
+</body>
+</html>

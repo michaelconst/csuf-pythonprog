@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Title: {{ book.title }}</h1>
+
+    <p><strong>Author:</strong> <a href="">{{ book.title }}</a></p> <!-- author detail link not yet defined -->
+    <p><strong>Authors:</strong> {% for author in book.authors.all %} {{ author }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+    <p><strong>Publisher:</strong> {{ book.publisher }}</p>
+    <p><strong>Publication Date:</strong> {{ book.publication_date }}</p>
+
+{% endblock %}
